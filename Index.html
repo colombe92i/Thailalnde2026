@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Voyage en Thaïlande</title>
+  <style>
+    :root {
+      --primary: #0d9488;
+      --primary-dark: #0f766e;
+      --bg: #f0fdfa;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .days-nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 20px 0;
+      margin-bottom: 10px;
+      scrollbar-width: thin;
+    }
+
+    .day-btn {
+      flex: 0 0 auto;
+      background: white;
+      border: 2px solid #e2e8f0;
+      padding: 12px 18px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .day-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .day-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .day-content {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .day-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card h2 {
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+      font-size: 1.45rem;
+    }
+
+    .card .date {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 22px;
+    }
+
+    .activity {
+      padding: 14px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .activity:last-child {
+      border-bottom: none;
+    }
+
+    .activity h3 {
+      font-size: 1.08rem;
+      margin-bottom: 5px;
+    }
+
+    .activity p {
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #ccfbf1;
+      color: var(--primary-dark);
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .price {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 8px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    .activity-img-wrapper {
+      margin-top: 14px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      max-width: 100%;
+    }
+
+    .activity-img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      background-color: #f8fafc;
+      display: block;
+    }
+
+    .summary {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 25px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .summary h3 {
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+
+    .summary ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .summary li {
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .summary li:last-child {
+      border-bottom: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.7rem; }
+      .card { padding: 18px; }
+      .day-btn { padding: 10px 14px; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🇹🇭 Mon Voyage en Thaïlande</h1>
+    <p>Phuket → Îles Similan → Koh Lipe → Koh Samui → Bangkok → Phuket</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Récapitulatif des prix -->
+    <div class="summary">
+      <h3>Récapitulatif des hébergements & transports clés</h3>
+      <ul>
+        <li>3 nuits à Phuket → <strong>200 €</strong> (pour 2 personnes)</li>
+        <li>2 nuits à Koh Lipe → <strong>124 €</strong> (pour 2 personnes)</li>
+        <li>Bateau Koh Lipe → Pak Bara + minivan Hat Yai → <strong>~55 €</strong> (pour 2 personnes)</li>
+        <li>Vol Hat Yai → Koh Samui → <strong>~240 €</strong> (estimation pour 2 personnes)</li>
+        <li>Vol Koh Samui → Bangkok → <strong>~190 €</strong> (estimation pour 2 personnes)</li>
+        <li>Vol Bangkok → Phuket → <strong>~70 € à 90 €</strong> (estimation pour 2 personnes)</li>
+      </ul>
+    </div>
+
+    <!-- Navigation -->
+    <div class="days-nav" id="daysNav">
+      <button class="day-btn active" data-day="28">28 nov</button>
+      <button class="day-btn" data-day="29">29 nov</button>
+      <button class="day-btn" data-day="30">30 nov</button>
+      <button class="day-btn" data-day="1">1er déc</button>
+      <button class="day-btn" data-day="2">2 déc</button>
+      <button class="day-btn" data-day="3">3 déc</button>
+      <button class="day-btn" data-day="4">4 déc</button>
+      <button class="day-btn" data-day="5">5 déc</button>
+      <button class="day-btn" data-day="6">6 déc</button>
+      <button class="day-btn" data-day="7">7 déc</button>
+      <button class="day-btn" data-day="8">8 déc</button>
+      <button class="day-btn" data-day="9">9 déc</button>
+    </div>
+
+    <!-- 28 novembre -->
+    <div class="day-content active" id="day-28">
+      <div class="card">
+        <h2>Visite de Phuket</h2>
+        <div class="date">Samedi 28 novembre 2026 • Phuket</div>
+
+        <div class="activity">
+          <h3>Vieille ville de Phuket (Old Town)</h3>
+          <p>Architecture sino-portugaise, cafés, street art et ambiance locale</p>
+          <span class="tag">Culture</span>
+        </div>
+
+        <div class="activity">
+          <h3>Wat Chalong</h3>
+          <p>Le temple le plus important de Phuket</p>
+          <span class="tag">Temple</span>
+        </div>
+
+        <div class="activity">
+          <h3>Big Buddha</h3>
+          <p>Grande statue et vue panoramique sur le sud de l’île</p>
+          <span class="tag">Temple & Point de vue</span>
+        </div>
+
+        <div class="activity">
+          <h3>Soirée plage & bar détente</h3>
+          <p>Fin de journée relaxante en bord de mer</p>
+          <span class="tag">Détente</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 29 novembre -->
+    <div class="day-content" id="day-29">
+      <div class="card">
+        <h2>Excursion Îles Similan</h2>
+        <div class="date">Dimanche 29 novembre 2026 • Phuket</div>
+
+        <div class="activity">
+          <h3>Excursion aux Îles Similan</h3>
+          <p>Journée complète sur l’un des plus beaux archipels de Thaïlande (snorkelling, plages, paysages)</p>
+          <span class="tag">Excursion</span>
+          <span class="price">130 € pour 2 personnes</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 30 novembre -->
+    <div class="day-content" id="day-30">
+      <div class="card">
+        <h2>Départ vers Koh Lipe</h2>
+        <div class="date">Lundi 30 novembre 2026 • Phuket → Koh Lipe</div>
+
+        <div class="activity">
+          <h3>Départ de Phuket</h3>
+          <p>Bateau direction Koh Lipe</p>
+          <span class="tag">Transport</span>
+        </div>
+
+        <div class="activity">
+          <h3>Arrivée et installation à Koh Lipe</h3>
+          <p>Début du séjour de 2 nuits</p>
+          <span class="tag">Hébergement</span>
+          <span class="price">124 € les 2 nuits (pour 2 personnes)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1er décembre -->
+    <div class="day-content" id="day-1">
+      <div class="card">
+        <h2>Koh Lipe – Plongée</h2>
+        <div class="date">Mardi 1er décembre 2026 • Koh Lipe</div>
+
+        <div class="activity">
+          <h3>Programme de plongée</h3>
+          <p>Journée dédiée à la plongée autour de Koh Lipe</p>
+          <span class="tag">Plongée</span>
+        </div>
+
+        <div class="activity">
+          <h3>Temps libre / plage</h3>
+          <p>Profiter de l’île après la plongée</p>
+          <span class="tag">Détente</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 décembre -->
+    <div class="day-content" id="day-2">
+      <div class="card">
+        <h2>Koh Lipe → Koh Samui</h2>
+        <div class="date">Mercredi 2 décembre 2026</div>
+
+        <div class="activity">
+          <h3>Bateau Koh Lipe → Pak Bara + Minivan vers Hat Yai</h3>
+          <p>Traversée en speedboat / ferry jusqu'au port de Pak Bara puis navette minivan jusqu'à l'aéroport de Hat Yai (HDY).</p>
+          <span class="tag">Bateau & Minivan</span>
+          <span class="price">~27 € / pers. (~55 € pour 2)</span>
+        </div>
+
+        <div class="activity">
+          <h3>Vol Hat Yai (HDY) → Koh Samui (USM)</h3>
+          <p>Vol intérieur depuis l'aéroport de Hat Yai à destination de l'aéroport international de Koh Samui.</p>
+          <span class="tag">Transport / Vol</span>
+          <span class="price">~120 € / pers. (~240 € pour 2)</span>
+        </div>
+
+        <div class="activity">
+          <h3>Arrivée et installation à Koh Samui</h3>
+          <p>Installation à votre hôtel et première découverte de l’île</p>
+          <span class="tag">Arrivée</span>
+        </div>
+
+        <div class="activity">
+          <h3>Visite de Koh Samui + Cascades de Na Muang + Plages</h3>
+          <p>Découverte de l’île, baignade aux cascades de Na Muang et temps sur les plages</p>
+          <span class="tag">Nature & Plage</span>
+        </div>
+
+        <div class="activity">
+          <h3>Soirée sur Koh Samui</h3>
+          <p>Première soirée sur l’île</p>
+          <span class="tag">Détente</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 décembre -->
+    <div class="day-content" id="day-3">
+      <div class="card">
+        <h2>Ang Thong & Pig Island</h2>
+        <div class="date">Jeudi 3 décembre 2026 • Koh Samui</div>
+
+        <div class="activity">
+          <h3>Parc national d’Ang Thong</h3>
+          <p>Archipel d’îles calcaires, kayak, snorkelling et points de vue</p>
+          <span class="tag">Excursion</span>
+        </div>
+
+        <div class="activity">
+          <h3>Pig Island (Koh Madsum)</h3>
+          <p>Petite île connue pour ses cochons sur la plage</p>
+          <span class="tag">Excursion</span>
+        </div>
+
+        <div class="activity">
+          <h3>Soirée au marché de Fisherman’s Village</h3>
+          <p>Ambiance, street food et bars à Bophut</p>
+          <span class="tag">Soirée</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 décembre -->
+    <div class="day-content" id="day-4">
+      <div class="card">
+        <h2>Journée Excursion Koh Tao</h2>
+        <div class="date">Vendredi 4 décembre 2026 • Koh Samui → Koh Tao</div>
+
+        <div class="activity">
+          <h3>Koh Tao : snorkeling avec les tortues à Nangyuan, loin de la foule</h3>
+          <p>Journée complète d'excursion : bancs de sable de Nangyuan, spots de snorkeling et nage avec les tortues marines (Ocean Blue Koh Tao).</p>
+          <span class="tag">Excursion</span>
+          <span class="tag">Snorkeling</span>
+          <span class="price">À partir de 31 € / pers.</span>
+
+          <div class="activity-img-wrapper">
+            <img class="activity-img" src="koh-tao-excursion.jpg" alt="Excursion Koh Tao Snorkeling Nangyuan">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 décembre -->
+    <div class="day-content" id="day-5">
+      <div class="card">
+        <h2>Départ pour Bangkok</h2>
+        <div class="date">Samedi 5 décembre 2026 • Koh Samui → Bangkok</div>
+
+        <div class="activity">
+          <h3>Vol Koh Samui (USM) → Bangkok (BKK)</h3>
+          <p>Vol direct d'environ 1h15 opéré par Bangkok Airways depuis l'aéroport international de Samui.</p>
+          <span class="tag">Transport / Vol</span>
+          <span class="price">~95 € / pers. (~190 € pour 2)</span>
+        </div>
+
+        <div class="activity">
+          <h3>Installation à l'hôtel</h3>
+          <p>Check-in et repos avant de débuter l'exploration de la capitale.</p>
+          <span class="tag">Hébergement</span>
+        </div>
+
+        <div class="activity">
+          <h3>Première soirée : Rooftop & Street Food</h3>
+          <p>Cocktail au coucher du soleil sur un rooftop (ex: Octave ou Tichuca) puis dîner street food.</p>
+          <span class="tag">Soirée & Gastronomie</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 décembre -->
+    <div class="day-content" id="day-6">
+      <div class="card">
+        <h2>Chatuchak & Klongs traditionnels</h2>
+        <div class="date">Dimanche 6 décembre 2026 • Bangkok</div>
+
+        <div class="activity">
+          <h3>Marché du week-end de Chatuchak</h3>
+          <p>Le plus grand marché de plein air au monde (uniquement le week-end) : artisanat, fringues, déco, stands culinaires et ambiance unique.</p>
+          <span class="tag">Marché & Shopping</span>
+        </div>
+
+        <div class="activity">
+          <h3>Tour en bateau traditionnel (Long-tail boat) dans les Klongs</h3>
+          <p>Navigation sur les canaux de Thonburi : maisons sur pilotis, scènes de vie locale et passage devant le Grand Bouddha de Wat Paknam.</p>
+          <span class="tag">Balade insolite</span>
+        </div>
+
+        <div class="activity">
+          <h3>Wat Arun (Temple de l'Aube)</h3>
+          <p>Visite du majestueux temple orné de céramique et panorama au bord du fleuve Chao Phraya au soleil couchant.</p>
+          <span class="tag">Temple & Panorama</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 décembre -->
+    <div class="day-content" id="day-7">
+      <div class="card">
+        <h2>Temples Royaux & Chinatown</h2>
+        <div class="date">Lundi 7 décembre 2026 • Bangkok</div>
+
+        <div class="activity">
+          <h3>Le Grand Palais & Wat Phra Kaew</h3>
+          <p>Résidence historique des rois de Siam et le célèbre temple du Bouddha d'Émeraude aux dorures spectaculaires.</p>
+          <span class="tag">Culture & Histoire</span>
+        </div>
+
+        <div class="activity">
+          <h3>Wat Pho & Massage traditionnel</h3>
+          <p>Temple du gigantesque Bouddha couché de 46m de long et berceau de l'école nationale du massage thaï.</p>
+          <span class="tag">Temple & Bien-être</span>
+        </div>
+
+        <div class="activity">
+          <h3>Chinatown en soirée (Yaowarat Road)</h3>
+          <p>Plongée au milieu des néons géants, enseignes lumineuses et le meilleur temple de street food nocturne d'Asie.</p>
+          <span class="tag">Street Food & Ambiance</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 décembre -->
+    <div class="day-content" id="day-8">
+      <div class="card">
+        <h2>Modernité, Parc & Vue vertigineuse</h2>
+        <div class="date">Mardi 8 décembre 2026 • Bangkok</div>
+
+        <div class="activity">
+          <h3>ICONSIAM (SookSiam)</h3>
+          <p>Centre commercial emblématique au bord de l'eau intégrant un marché flottant couvert reproduisant toutes les régions de Thaïlande.</p>
+          <span class="tag">Découverte & Shopping</span>
+        </div>
+
+        <div class="activity">
+          <h3>Parc Lumpini</h3>
+          <p>Poumon vert de la ville au milieu des gratte-ciel, célèbre pour ses varans géants en liberté au bord des lacs.</p>
+          <span class="tag">Nature & Détente</span>
+        </div>
+
+        <div class="activity">
+          <h3>Mahanakhon SkyWalk</h3>
+          <p>Montée au 78e étage de la plus haute tour de Bangkok avec plancher de verre transparent à 314 mètres de hauteur au coucher du soleil.</p>
+          <span class="tag">Insolite & Vue 360°</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 décembre -->
+    <div class="day-content" id="day-9">
+      <div class="card">
+        <h2>Derniers souvenirs & Retour à Phuket</h2>
+        <div class="date">Mercredi 9 décembre 2026 • Bangkok → Phuket</div>
+
+        <div class="activity">
+          <h3>Matinée shopping & souvenirs</h3>
+          <p>Derniers achats souvenirs à MBK Center ou balade dans le quartier créatif de Charoen Krung / Talat Noi.</p>
+          <span class="tag">Détente & Souvenirs</span>
+        </div>
+
+        <div class="activity">
+          <h3>Vol Bangkok (BKK/DMK) → Phuket (HKT)</h3>
+          <p>Vol intérieur direct d'environ 1h25 (opéré par Thai VietJet, AirAsia ou Lion Air).</p>
+          <span class="tag">Transport / Vol</span>
+          <span class="price">~35 € à 45 € / pers. (~80 € pour 2)</span>
+        </div>
+
+        <div class="activity">
+          <h3>Arrivée à Phuket</h3>
+          <p>Retour sur l'île de Phuket, transfert à votre logement pour la fin du voyage.</p>
+          <span class="tag">Arrivée</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Bon voyage en Thaïlande 🌴
+  </footer>
+
+  <script>
+    const buttons = document.querySelectorAll('.day-btn');
+    const contents = document.querySelectorAll('.day-content');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        contents.forEach(c => c.classList.remove('active'));
+
+        const day = btn.getAttribute('data-day');
+        document.getElementById(`day-${day}`).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
