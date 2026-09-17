@@ -1,592 +1,670 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Voyage en Thaïlande</title>
-  <style>
-    :root {
-      --primary: #0d9488;
-      --primary-dark: #0f766e;
-      --bg: #f0fdfa;
-      --card: #ffffff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --accent: #f59e0b;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mon voyage en Thaïlande</title>
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+*{box-sizing:border-box}
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding-bottom: 60px;
-    }
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#eef8f7;
+  color:#183b3b;
+}
 
-    header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
+header{
+  background:linear-gradient(135deg,#0d7773,#18a39b);
+  color:white;
+  text-align:center;
+  padding:28px 15px;
+}
 
-    header h1 {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-    }
+h1{margin:0}
+header p{margin:8px 0 0}
 
-    header p {
-      opacity: 0.9;
-      font-size: 1.1rem;
-    }
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:16px;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+.summary,.day,.day-card{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 5px 20px #0001;
+}
 
-    .days-nav {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 20px 0;
-      margin-bottom: 10px;
-      scrollbar-width: thin;
-    }
+.summary{margin-bottom:16px}
+.summary h2,h2{color:#087873}
 
-    .day-btn {
-      flex: 0 0 auto;
-      background: white;
-      border: 2px solid #e2e8f0;
-      padding: 12px 18px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-      white-space: nowrap;
-      font-size: 0.95rem;
-    }
+.calendar{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:5px 0 15px;
+}
 
-    .day-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
+button{
+  border:0;
+  border-radius:14px;
+  padding:12px 15px;
+  background:white;
+  color:#087873;
+  font-weight:bold;
+  white-space:nowrap;
+  cursor:pointer;
+}
 
-    .day-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
+button.active{
+  background:#087873;
+  color:white;
+}
 
-    .day-content {
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
+.day{display:none}
+.day.active{display:block}
 
-    .day-content.active {
-      display: block;
-    }
+.subtitle{
+  color:#718585;
+  font-size:14px;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+.card{
+  background:#f2f9f8;
+  border-left:5px solid #13a39b;
+  border-radius:12px;
+  padding:13px;
+  margin:11px 0;
+  line-height:1.5;
+}
 
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-    }
+strong{color:#086f6b}
 
-    .card h2 {
-      color: var(--primary-dark);
-      margin-bottom: 4px;
-      font-size: 1.45rem;
-    }
+.price{
+  display:inline-block;
+  background:#fff2cf;
+  color:#805b00;
+  padding:6px 10px;
+  border-radius:9px;
+  font-weight:bold;
+  font-size:13px;
+}
 
-    .card .date {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 22px;
-    }
+footer{
+  text-align:center;
+  color:#718585;
+  font-size:12px;
+  padding:25px;
+}
 
-    .activity {
-      padding: 14px 0;
-      border-bottom: 1px solid #f1f5f9;
-    }
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:12px;
+  margin:16px 0 24px;
+}
 
-    .activity:last-child {
-      border-bottom: none;
-    }
+.info-box{
+  background:#f0fbfa;
+  border:1px solid #b7e5df;
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+}
 
-    .activity h3 {
-      font-size: 1.08rem;
-      margin-bottom: 5px;
-    }
+.info-box h3{
+  font-size:14px;
+  margin:0 0 8px;
+}
 
-    .activity p {
-      color: var(--muted);
-      font-size: 0.97rem;
-    }
+.info-box strong{
+  font-size:25px;
+  color:#087f79;
+  display:block;
+}
 
-    .tag {
-      display: inline-block;
-      background: #ccfbf1;
-      color: var(--primary-dark);
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-top: 8px;
-      font-weight: 600;
-    }
+.info-box p{
+  font-size:12px;
+  margin:6px 0 0;
+}
 
-    .price {
-      display: inline-block;
-      background: #fef3c7;
-      color: #92400e;
-      font-size: 0.8rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-top: 8px;
-      font-weight: 600;
-      margin-left: 6px;
-    }
+.muted{color:#607d7b}
 
-    .activity-img-wrapper {
-      margin-top: 14px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e2e8f0;
-      max-width: 100%;
-    }
+.note{
+  background:#fff7df;
+  border-left:4px solid #e6b84c;
+  border-radius:10px;
+  padding:12px;
+}
 
-    .activity-img {
-      width: 100%;
-      max-height: 420px;
-      object-fit: contain;
-      background-color: #f8fafc;
-      display: block;
-    }
-
-    .summary {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 25px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .summary h3 {
-      color: var(--primary-dark);
-      margin-bottom: 12px;
-    }
-
-    .summary ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .summary li {
-      padding: 6px 0;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .summary li:last-child {
-      border-bottom: none;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.7rem; }
-      .card { padding: 18px; }
-      .day-btn { padding: 10px 14px; font-size: 0.9rem; }
-    }
-  </style>
+h3{margin-top:24px}
+li{margin-bottom:9px;line-height:1.5}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>🇹🇭 Mon Voyage en Thaïlande</h1>
-    <p>Phuket → Îles Similan → Koh Lipe → Koh Samui → Bangkok → Phuket</p>
-  </header>
+<header>
+<h1>🇹🇭 Mon Voyage en Thaïlande</h1>
+<p>
+Phuket → Khao Lak → Khao Sok → Bangkok →
+Ayutthaya → Krabi → Phi Phi → Phuket
+</p>
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <!-- Récapitulatif des prix -->
-    <div class="summary">
-      <h3>Récapitulatif des hébergements & transports clés</h3>
-      <ul>
-        <li>3 nuits à Phuket → <strong>200 €</strong> (pour 2 personnes)</li>
-        <li>2 nuits à Koh Lipe → <strong>124 €</strong> (pour 2 personnes)</li>
-        <li>Bateau Koh Lipe → Pak Bara + minivan Hat Yai → <strong>~55 €</strong> (pour 2 personnes)</li>
-        <li>Vol Hat Yai → Koh Samui → <strong>~240 €</strong> (estimation pour 2 personnes)</li>
-        <li>Vol Koh Samui → Bangkok → <strong>~190 €</strong> (estimation pour 2 personnes)</li>
-        <li>Vol Bangkok → Phuket → <strong>~70 € à 90 €</strong> (estimation pour 2 personnes)</li>
-      </ul>
-    </div>
+<section class="summary">
+<h2>🗺️ Résumé du circuit</h2>
+27–29 novembre : Phuket •
+30 novembre–3 décembre : Khao Lak et Khao Sok •
+4–6 décembre : Bangkok et Ayutthaya •
+7–10 décembre : Krabi, Phi Phi et retour Phuket
+</section>
 
-    <!-- Navigation -->
-    <div class="days-nav" id="daysNav">
-      <button class="day-btn active" data-day="28">28 nov</button>
-      <button class="day-btn" data-day="29">29 nov</button>
-      <button class="day-btn" data-day="30">30 nov</button>
-      <button class="day-btn" data-day="1">1er déc</button>
-      <button class="day-btn" data-day="2">2 déc</button>
-      <button class="day-btn" data-day="3">3 déc</button>
-      <button class="day-btn" data-day="4">4 déc</button>
-      <button class="day-btn" data-day="5">5 déc</button>
-      <button class="day-btn" data-day="6">6 déc</button>
-      <button class="day-btn" data-day="7">7 déc</button>
-      <button class="day-btn" data-day="8">8 déc</button>
-      <button class="day-btn" data-day="9">9 déc</button>
-    </div>
+<div class="calendar">
 
-    <!-- 28 novembre -->
-    <div class="day-content active" id="day-28">
-      <div class="card">
-        <h2>Visite de Phuket</h2>
-        <div class="date">Samedi 28 novembre 2026 • Phuket</div>
+<button onclick="showDay(0)" class="active">27 nov</button>
+<button onclick="showDay(1)">28 nov</button>
+<button onclick="showDay(2)">29 nov</button>
+<button onclick="showDay(3)">30 nov</button>
+<button onclick="showDay(4)">1er déc</button>
+<button onclick="showDay(5)">2 déc</button>
+<button onclick="showDay(6)">3 déc</button>
+<button onclick="showDay(7)">4 déc</button>
+<button onclick="showDay(8)">5 déc</button>
+<button onclick="showDay(9)">6 déc</button>
+<button onclick="showDay(10)">7 déc</button>
+<button onclick="showDay(11)">8 déc</button>
+<button onclick="showDay(12)">9 déc</button>
+<button onclick="showDay(13)">10 déc</button>
 
-        <div class="activity">
-          <h3>Vieille ville de Phuket (Old Town)</h3>
-          <p>Architecture sino-portugaise, cafés, street art et ambiance locale</p>
-          <span class="tag">Culture</span>
-        </div>
+</div>
 
-        <div class="activity">
-          <h3>Wat Chalong</h3>
-          <p>Le temple le plus important de Phuket</p>
-          <span class="tag">Temple</span>
-        </div>
+<section class="day active">
+<h2>📅 27 novembre — Arrivée à Phuket</h2>
+<div class="subtitle">Installation tranquille</div>
 
-        <div class="activity">
-          <h3>Big Buddha</h3>
-          <p>Grande statue et vue panoramique sur le sud de l’île</p>
-          <span class="tag">Temple & Point de vue</span>
-        </div>
+<div class="card">
+✈️ 19h00 : arrivée à Phuket, immigration, bagages et transfert vers Phuket Old Town.
+</div>
 
-        <div class="activity">
-          <h3>Soirée plage & bar détente</h3>
-          <p>Fin de journée relaxante en bord de mer</p>
-          <span class="tag">Détente</span>
-        </div>
-      </div>
-    </div>
+<div class="card">
+🏨 Installation à l’hôtel, dîner et repos. Aucun programme touristique.
+</div>
+</section>
 
-    <!-- 29 novembre -->
-    <div class="day-content" id="day-29">
-      <div class="card">
-        <h2>Excursion Îles Similan</h2>
-        <div class="date">Dimanche 29 novembre 2026 • Phuket</div>
+<section class="day">
+<h2>📅 28 novembre — Phuket Old Town</h2>
+<div class="subtitle">Vieille ville et gastronomie</div>
 
-        <div class="activity">
-          <h3>Excursion aux Îles Similan</h3>
-          <p>Journée complète sur l’un des plus beaux archipels de Thaïlande (snorkelling, plages, paysages)</p>
-          <span class="tag">Excursion</span>
-          <span class="price">130 € pour 2 personnes</span>
-        </div>
-      </div>
-    </div>
+<div class="card">
+🌅 Thalang Road, Soi Romanee et Dibuk Road.
+</div>
 
-    <!-- 30 novembre -->
-    <div class="day-content" id="day-30">
-      <div class="card">
-        <h2>Départ vers Koh Lipe</h2>
-        <div class="date">Lundi 30 novembre 2026 • Phuket → Koh Lipe</div>
+<div class="card">
+📸 Architecture sino-portugaise, cafés, boutiques, marchés et cuisine locale.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Départ de Phuket</h3>
-          <p>Bateau direction Koh Lipe</p>
-          <span class="tag">Transport</span>
-        </div>
+<section class="day">
+<h2>📅 29 novembre — Sud de Phuket</h2>
+<div class="subtitle">Temples, panoramas et coucher de soleil</div>
 
-        <div class="activity">
-          <h3>Arrivée et installation à Koh Lipe</h3>
-          <p>Début du séjour de 2 nuits</p>
-          <span class="tag">Hébergement</span>
-          <span class="price">124 € les 2 nuits (pour 2 personnes)</span>
-        </div>
-      </div>
-    </div>
+<div class="card">
+🛕 08h30 Wat Chalong → 10h Big Buddha → 11h30 Karon Viewpoint.
+</div>
 
-    <!-- 1er décembre -->
-    <div class="day-content" id="day-1">
-      <div class="card">
-        <h2>Koh Lipe – Plongée</h2>
-        <div class="date">Mardi 1er décembre 2026 • Koh Lipe</div>
+<div class="card">
+🏖️ Déjeuner à Kata/Karon puis 15h30 Promthep Cape. Soirée tranquille.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Programme de plongée</h3>
-          <p>Journée dédiée à la plongée autour de Koh Lipe</p>
-          <span class="tag">Plongée</span>
-        </div>
+<section class="day">
+<h2>📅 30 novembre — Phuket → Khao Lak</h2>
+<div class="subtitle">Transfert et plage</div>
 
-        <div class="activity">
-          <h3>Temps libre / plage</h3>
-          <p>Profiter de l’île après la plongée</p>
-          <span class="tag">Détente</span>
-        </div>
-      </div>
-    </div>
+<div class="card">
+🚐 Transfert d’environ 1h30 à 2h vers Khao Lak.
+</div>
 
-    <!-- 2 décembre -->
-    <div class="day-content" id="day-2">
-      <div class="card">
-        <h2>Koh Lipe → Koh Samui</h2>
-        <div class="date">Mercredi 2 décembre 2026</div>
+<div class="card">
+🏖️ Installation, plage et soirée. Khao Lak sert de base pour les Similan.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Bateau Koh Lipe → Pak Bara + Minivan vers Hat Yai</h3>
-          <p>Traversée en speedboat / ferry jusqu'au port de Pak Bara puis navette minivan jusqu'à l'aéroport de Hat Yai (HDY).</p>
-          <span class="tag">Bateau & Minivan</span>
-          <span class="price">~27 € / pers. (~55 € pour 2)</span>
-        </div>
+<section class="day">
+<h2>📅 1er décembre — Similan Islands</h2>
+<div class="subtitle">Excursion journée complète</div>
 
-        <div class="activity">
-          <h3>Vol Hat Yai (HDY) → Koh Samui (USM)</h3>
-          <p>Vol intérieur depuis l'aéroport de Hat Yai à destination de l'aéroport international de Koh Samui.</p>
-          <span class="tag">Transport / Vol</span>
-          <span class="price">~120 € / pers. (~240 € pour 2)</span>
-        </div>
+<div class="card">
+🏝️ Départ très tôt, plages, eaux turquoise et snorkeling.
+</div>
 
-        <div class="activity">
-          <h3>Arrivée et installation à Koh Samui</h3>
-          <p>Installation à votre hôtel et première découverte de l’île</p>
-          <span class="tag">Arrivée</span>
-        </div>
+<div class="card">
+🐠 Formule early bird conseillée.
+</div>
 
-        <div class="activity">
-          <h3>Visite de Koh Samui + Cascades de Na Muang + Plages</h3>
-          <p>Découverte de l’île, baignade aux cascades de Na Muang et temps sur les plages</p>
-          <span class="tag">Nature & Plage</span>
-        </div>
+<span class="price">≈ 90–100 € / personne</span>
+</section>
 
-        <div class="activity">
-          <h3>Soirée sur Koh Samui</h3>
-          <p>Première soirée sur l’île</p>
-          <span class="tag">Détente</span>
-        </div>
-      </div>
-    </div>
+<section class="day">
+<h2>📅 2 décembre — Khao Lak → Khao Sok</h2>
+<div class="subtitle">Jungle et lodge</div>
 
-    <!-- 3 décembre -->
-    <div class="day-content" id="day-3">
-      <div class="card">
-        <h2>Ang Thong & Pig Island</h2>
-        <div class="date">Jeudi 3 décembre 2026 • Koh Samui</div>
+<div class="card">
+🚐 Transfert d’environ 1h30 à 2h vers Khao Sok.
+</div>
 
-        <div class="activity">
-          <h3>Parc national d’Ang Thong</h3>
-          <p>Archipel d’îles calcaires, kayak, snorkelling et points de vue</p>
-          <span class="tag">Excursion</span>
-        </div>
+<div class="card">
+🏡 Installation dans un bungalow/lodge puis petite balade.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Pig Island (Koh Madsum)</h3>
-          <p>Petite île connue pour ses cochons sur la plage</p>
-          <span class="tag">Excursion</span>
-        </div>
+<section class="day">
+<h2>📅 3 décembre — Cheow Lan Lake</h2>
+<div class="subtitle">Grande journée nature</div>
 
-        <div class="activity">
-          <h3>Soirée au marché de Fisherman’s Village</h3>
-          <p>Ambiance, street food et bars à Bophut</p>
-          <span class="tag">Soirée</span>
-        </div>
-      </div>
-    </div>
+<div class="card">
+🚤 Ratchaprapha Dam, longtail boat et paysages du lac.
+</div>
 
-    <!-- 4 décembre -->
-    <div class="day-content" id="day-4">
-      <div class="card">
-        <h2>Journée Excursion Koh Tao</h2>
-        <div class="date">Vendredi 4 décembre 2026 • Koh Samui → Koh Tao</div>
+<div class="card">
+🏠 Maison flottante, déjeuner, grotte, petite randonnée puis retour au lodge.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Koh Tao : snorkeling avec les tortues à Nangyuan, loin de la foule</h3>
-          <p>Journée complète d'excursion : bancs de sable de Nangyuan, spots de snorkeling et nage avec les tortues marines (Ocean Blue Koh Tao).</p>
-          <span class="tag">Excursion</span>
-          <span class="tag">Snorkeling</span>
-          <span class="price">À partir de 31 € / pers.</span>
+<section class="day">
+<h2>📅 4 décembre — Khao Sok → Bangkok</h2>
+<div class="subtitle">Vol et Chinatown</div>
 
-          <div class="activity-img-wrapper">
-            <img class="activity-img" src="koh-tao-excursion.jpg" alt="Excursion Koh Tao Snorkeling Nangyuan">
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="card">
+🚐 Khao Sok → Surat Thani puis ✈️ vol vers Bangkok.
+</div>
 
-    <!-- 5 décembre -->
-    <div class="day-content" id="day-5">
-      <div class="card">
-        <h2>Départ pour Bangkok</h2>
-        <div class="date">Samedi 5 décembre 2026 • Koh Samui → Bangkok</div>
+<div class="card">
+🌆 Installation à l’hôtel puis Chinatown/Yaowarat le soir.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Vol Koh Samui (USM) → Bangkok (BKK)</h3>
-          <p>Vol direct d'environ 1h15 opéré par Bangkok Airways depuis l'aéroport international de Samui.</p>
-          <span class="tag">Transport / Vol</span>
-          <span class="price">~95 € / pers. (~190 € pour 2)</span>
-        </div>
+<section class="day">
+<h2>📅 5 décembre — Temples de Bangkok</h2>
+<div class="subtitle">Grand Palace, Wat Pho et Wat Arun</div>
 
-        <div class="activity">
-          <h3>Installation à l'hôtel</h3>
-          <p>Check-in et repos avant de débuter l'exploration de la capitale.</p>
-          <span class="tag">Hébergement</span>
-        </div>
+<div class="card">
+👑 08h30 Grand Palace et Wat Phra Kaew → 11h Wat Pho → déjeuner → 14h Wat Arun.
+</div>
 
-        <div class="activity">
-          <h3>Première soirée : Rooftop & Street Food</h3>
-          <p>Cocktail au coucher du soleil sur un rooftop (ex: Octave ou Tichuca) puis dîner street food.</p>
-          <span class="tag">Soirée & Gastronomie</span>
-        </div>
-      </div>
-    </div>
+<span class="price">
+🎟️ Grand Palace : 500 THB/personne.
+Wat Pho : environ 300 THB/personne.
+</span>
+</section>
 
-    <!-- 6 décembre -->
-    <div class="day-content" id="day-6">
-      <div class="card">
-        <h2>Chatuchak & Klongs traditionnels</h2>
-        <div class="date">Dimanche 6 décembre 2026 • Bangkok</div>
+<section class="day">
+<h2>📅 6 décembre — Ayutthaya</h2>
+<div class="subtitle">Journée historique</div>
 
-        <div class="activity">
-          <h3>Marché du week-end de Chatuchak</h3>
-          <p>Le plus grand marché de plein air au monde (uniquement le week-end) : artisanat, fringues, déco, stands culinaires et ambiance unique.</p>
-          <span class="tag">Marché & Shopping</span>
-        </div>
+<div class="card">
+🏛️ Wat Mahathat, Wat Ratchaburana, Wat Phra Si Sanphet,
+Wat Chaiwatthanaram et Wat Lokayasutharam.
+</div>
 
-        <div class="activity">
-          <h3>Tour en bateau traditionnel (Long-tail boat) dans les Klongs</h3>
-          <p>Navigation sur les canaux de Thonburi : maisons sur pilotis, scènes de vie locale et passage devant le Grand Bouddha de Wat Paknam.</p>
-          <span class="tag">Balade insolite</span>
-        </div>
+<div class="card">
+🚐 Départ tôt depuis Bangkok puis retour en fin d’après-midi.
+</div>
+</section>
 
-        <div class="activity">
-          <h3>Wat Arun (Temple de l'Aube)</h3>
-          <p>Visite du majestueux temple orné de céramique et panorama au bord du fleuve Chao Phraya au soleil couchant.</p>
-          <span class="tag">Temple & Panorama</span>
-        </div>
-      </div>
-    </div>
+<section class="day">
+<h2>📅 7 décembre — Bangkok → Krabi</h2>
+<div class="subtitle">Vol et Railay</div>
 
-    <!-- 7 décembre -->
-    <div class="day-content" id="day-7">
-      <div class="card">
-        <h2>Temples Royaux & Chinatown</h2>
-        <div class="date">Lundi 7 décembre 2026 • Bangkok</div>
+<div class="card">
+✈️ Vol du matin vers Krabi puis installation à Ao Nang.
+</div>
 
-        <div class="activity">
-          <h3>Le Grand Palais & Wat Phra Kaew</h3>
-          <p>Résidence historique des rois de Siam et le célèbre temple du Bouddha d'Émeraude aux dorures spectaculaires.</p>
-          <span class="tag">Culture & Histoire</span>
-        </div>
+<div class="card">
+🚤 Après-midi à Railay West, Railay East,
+Phra Nang Beach et Phra Nang Cave.
+</div>
 
-        <div class="activity">
-          <h3>Wat Pho & Massage traditionnel</h3>
-          <p>Temple du gigantesque Bouddha couché de 46m de long et berceau de l'école nationale du massage thaï.</p>
-          <span class="tag">Temple & Bien-être</span>
-        </div>
+<span class="price">≈ 25–60 € / personne pour le vol</span>
+</section>
 
-        <div class="activity">
-          <h3>Chinatown en soirée (Yaowarat Road)</h3>
-          <p>Plongée au milieu des néons géants, enseignes lumineuses et le meilleur temple de street food nocturne d'Asie.</p>
-          <span class="tag">Street Food & Ambiance</span>
-        </div>
-      </div>
-    </div>
+<section class="day">
+<h2>📅 8 décembre — Hong Islands</h2>
+<div class="subtitle">Lagons et snorkeling</div>
 
-    <!-- 8 décembre -->
-    <div class="day-content" id="day-8">
-      <div class="card">
-        <h2>Modernité, Parc & Vue vertigineuse</h2>
-        <div class="date">Mardi 8 décembre 2026 • Bangkok</div>
+<div class="card">
+🏝️ Hong Island, Hong Lagoon, snorkeling et plages.
+</div>
 
-        <div class="activity">
-          <h3>ICONSIAM (SookSiam)</h3>
-          <p>Centre commercial emblématique au bord de l'eau intégrant un marché flottant couvert reproduisant toutes les régions de Thaïlande.</p>
-          <span class="tag">Découverte & Shopping</span>
-        </div>
+<div class="card">
+🌄 Viewpoint si inclus dans l’excursion.
+</div>
 
-        <div class="activity">
-          <h3>Parc Lumpini</h3>
-          <p>Poumon vert de la ville au milieu des gratte-ciel, célèbre pour ses varans géants en liberté au bord des lacs.</p>
-          <span class="tag">Nature & Détente</span>
-        </div>
+<span class="price">≈ 30–45 € / personne</span>
+</section>
 
-        <div class="activity">
-          <h3>Mahanakhon SkyWalk</h3>
-          <p>Montée au 78e étage de la plus haute tour de Bangkok avec plancher de verre transparent à 314 mètres de hauteur au coucher du soleil.</p>
-          <span class="tag">Insolite & Vue 360°</span>
-        </div>
-      </div>
-    </div>
+<section class="day">
+<h2>📅 9 décembre — Phi Phi → Phuket</h2>
+<div class="subtitle">Maya Bay et transfert direct</div>
 
-    <!-- 9 décembre -->
-    <div class="day-content" id="day-9">
-      <div class="card">
-        <h2>Derniers souvenirs & Retour à Phuket</h2>
-        <div class="date">Mercredi 9 décembre 2026 • Bangkok → Phuket</div>
+<div class="card">
+🚤 Phi Phi Leh, Maya Bay, Pileh Lagoon,
+snorkeling, Phi Phi Don et déjeuner.
+</div>
 
-        <div class="activity">
-          <h3>Matinée shopping & souvenirs</h3>
-          <p>Derniers achats souvenirs à MBK Center ou balade dans le quartier créatif de Charoen Krung / Talat Noi.</p>
-          <span class="tag">Détente & Souvenirs</span>
-        </div>
+<div class="card">
+⛴️ Excursion se terminant directement à Phuket,
+puis hôtel près de l’aéroport.
+</div>
 
-        <div class="activity">
-          <h3>Vol Bangkok (BKK/DMK) → Phuket (HKT)</h3>
-          <p>Vol intérieur direct d'environ 1h25 (opéré par Thai VietJet, AirAsia ou Lion Air).</p>
-          <span class="tag">Transport / Vol</span>
-          <span class="price">~35 € à 45 € / pers. (~80 € pour 2)</span>
-        </div>
+<span class="price">Prix à confirmer selon l’opérateur</span>
+</section>
 
-        <div class="activity">
-          <h3>Arrivée à Phuket</h3>
-          <p>Retour sur l'île de Phuket, transfert à votre logement pour la fin du voyage.</p>
-          <span class="tag">Arrivée</span>
-        </div>
-      </div>
-    </div>
+<section class="day">
+<h2>📅 10 décembre — Retour</h2>
+<div class="subtitle">Départ à 00h25</div>
 
-  </div>
+<div class="card">
+✈️ Départ de Phuket à 00h25.
+Prévoir d’arriver tôt à l’aéroport.
+</div>
+</section>
 
-  <footer>
-    Bon voyage en Thaïlande 🌴
-  </footer>
+<!-- PAGE INFORMATIONS UTILES -->
 
-  <script>
-    const buttons = document.querySelectorAll('.day-btn');
-    const contents = document.querySelectorAll('.day-content');
+<section class="day-card" id="infos-utiles" style="margin-top:32px;">
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+<h2>🆘 Infos utiles & applications en Thaïlande</h2>
 
-        contents.forEach(c => c.classList.remove('active'));
+<p class="muted">
+À enregistrer avant le départ. En cas d’urgence,
+indique toujours ta localisation précise,
+idéalement avec un point Google Maps.
+</p>
 
-        const day = btn.getAttribute('data-day');
-        document.getElementById(`day-${day}`).classList.add('active');
-      });
+<div class="info-grid">
+
+<div class="info-box">
+<h3>🚓 Police</h3>
+<strong>191</strong>
+<p>Urgence générale / police</p>
+</div>
+
+<div class="info-box">
+<h3>🚑 Ambulance</h3>
+<strong>1669</strong>
+<p>Urgence médicale nationale</p>
+</div>
+
+<div class="info-box">
+<h3>🔥 Pompiers</h3>
+<strong>199</strong>
+<p>Incendie et secours</p>
+</div>
+
+<div class="info-box">
+<h3>👮 Police touristique</h3>
+<strong>1155</strong>
+<p>Aide aux touristes</p>
+</div>
+
+<div class="info-box">
+<h3>🌴 Infos tourisme</h3>
+<strong>1672</strong>
+<p>Tourism Authority of Thailand</p>
+</div>
+
+<div class="info-box">
+<h3>🛂 Immigration</h3>
+<strong>1178</strong>
+<p>Questions visa et séjour</p>
+</div>
+
+<div class="info-box">
+<h3>✈️ Aéroports</h3>
+<strong>1722</strong>
+<p>Informations passagers AOT</p>
+</div>
+
+<div class="info-box">
+<h3>🚆 Trains</h3>
+<strong>1690</strong>
+<p>Informations ferroviaires</p>
+</div>
+
+</div>
+
+<h3>📱 Applications à installer</h3>
+
+<ul>
+<li>
+<strong>Grab :</strong>
+taxis/VTC, livraison et réservation de trajets.
+</li>
+
+<li>
+<strong>Bolt :</strong>
+alternative à Grab pour les déplacements urbains.
+</li>
+
+<li>
+<strong>Google Maps :</strong>
+itinéraires, lieux, horaires et partage de localisation.
+</li>
+
+<li>
+<strong>Google Translate :</strong>
+traduction thaï ↔ français, avec téléchargement hors connexion.
+</li>
+
+<li>
+<strong>12Go :</strong>
+recherche et réservation de trains, bus, ferries et transferts.
+</li>
+
+<li>
+<strong>WhatsApp :</strong>
+communication avec les proches et certains prestataires.
+</li>
+
+<li>
+<strong>Thailand Tourist Police :</strong>
+application d’aide et d’informations touristiques.
+</li>
+
+<li>
+<strong>Application de ta banque :</strong>
+active les notifications, vérifie les plafonds
+et garde un moyen de paiement de secours.
+</li>
+</ul>
+
+<h3>✅ À faire dès l’arrivée</h3>
+
+<ul>
+<li>Prendre une eSIM ou une SIM locale avec internet.</li>
+<li>Enregistrer les numéros d’urgence dans le téléphone.</li>
+<li>Télécharger les cartes Google Maps hors connexion.</li>
+<li>Garder une copie numérique du passeport et de l’assurance voyage.</li>
+<li>Noter l’adresse de chaque hôtel en anglais et si possible en thaï.</li>
+<li>Partager ton itinéraire avec un proche.</li>
+<li>Conserver les coordonnées de l’assurance voyage.</li>
+<li>Vérifier le véhicule, la plaque et le prix du taxi dans l’application.</li>
+</ul>
+
+<div class="note">
+<strong>Conseil :</strong>
+le 1155 est le numéro à retenir en priorité pour une difficulté
+en tant que touriste. Les numéros 191, 1669 et 199 sont destinés
+aux urgences immédiates.
+</div>
+
+</section>
+
+<!-- PAGE PAIEMENTS -->
+
+<section class="day-card" id="paiements-thailande" style="margin-top:32px;">
+
+<h2>💳 Paiements & argent en Thaïlande</h2>
+
+<p class="muted">
+Les conseils essentiels pour payer facilement,
+éviter les frais inutiles et garder une solution de secours.
+</p>
+
+<h3>💵 Espèces ou carte ?</h3>
+
+<ul>
+<li>
+<strong>Espèces (bahts thaïlandais – THB) :</strong>
+indispensables pour les marchés, petits restaurants,
+street-food, taxis locaux et certains prestataires.
+</li>
+
+<li>
+<strong>Carte bancaire :</strong>
+pratique dans les hôtels, centres commerciaux,
+restaurants touristiques et grandes enseignes,
+mais pas acceptée partout.
+</li>
+
+<li>
+<strong>QR code thaïlandais :</strong>
+très courant en Thaïlande. Certains paiements locaux
+peuvent nécessiter une application ou un compte bancaire thaïlandais.
+Ne compte pas uniquement dessus.
+</li>
+</ul>
+
+<h3>🏧 Retirer de l’argent</h3>
+
+<ul>
+<li>
+Privilégier les distributeurs situés dans les banques
+ou les lieux fréquentés.
+</li>
+
+<li>
+Le retrait peut entraîner des frais du distributeur thaïlandais
+et de ta banque française.
+</li>
+
+<li>
+Si le distributeur propose une conversion en euros,
+choisir généralement le retrait en <strong>THB</strong>
+et refuser la conversion proposée par le distributeur (DCC).
+</li>
+
+<li>
+Éviter de retirer de très petites sommes à répétition
+pour limiter les frais fixes.
+</li>
+
+<li>
+Conserver un peu de liquide séparément du portefeuille principal.
+</li>
+</ul>
+
+<h3>📲 Applications et moyens de paiement utiles</h3>
+
+<ul>
+<li>
+<strong>Application de ta banque :</strong>
+active les notifications et vérifie les plafonds
+de paiement et de retrait à l’étranger.
+</li>
+
+<li>
+<strong>Wise ou Revolut :</strong>
+peuvent être utiles pour comparer les taux de change
+et disposer d’une carte de secours.
+</li>
+
+<li>
+<strong>Google Pay / Apple Pay :</strong>
+pratiques lorsque le terminal accepte le sans contact,
+mais garde toujours une carte physique.
+</li>
+
+<li>
+<strong>Google Maps :</strong>
+utile pour repérer les distributeurs.
+</li>
+</ul>
+
+<h3>🔐 Sécurité et préparation</h3>
+
+<ul>
+<li>
+Prévoir au moins <strong>deux moyens de paiement</strong> :
+carte principale + carte de secours ou espèces.
+</li>
+
+<li>
+Ne garde pas toutes tes cartes et tout ton argent au même endroit.
+</li>
+
+<li>
+Note le numéro d’opposition de ta banque.
+</li>
+
+<li>
+Vérifie les frais hors zone euro auprès de ta banque.
+</li>
+
+<li>
+Ne communique jamais ton code PIN
+et masque le clavier au distributeur.
+</li>
+
+<li>
+Garde une réserve d’espèces pour les transferts,
+les excursions et les petits achats.
+</li>
+</ul>
+
+<div class="note">
+<strong>Conseil pratique :</strong>
+arrive avec une carte bancaire activée pour l’étranger
+et retire ensuite des bahts dans un distributeur bancaire.
+Compare les taux et les frais avant de changer une grosse somme.
+</div>
+
+</section>
+
+<footer>
+🇹🇭 Programme basé sur le document fourni.
+Prix indicatifs à vérifier avant réservation.
+</footer>
+
+</div>
+
+<script>
+
+function showDay(i){
+
+  document
+    .querySelectorAll('.day')
+    .forEach((e,n)=>{
+      e.classList.toggle('active',n===i);
     });
-  </script>
+
+  document
+    .querySelectorAll('.calendar button')
+    .forEach((e,n)=>{
+      e.classList.toggle('active',n===i);
+    });
+
+}
+
+</script>
 
 </body>
 </html>
